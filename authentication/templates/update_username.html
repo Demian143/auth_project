@@ -1,0 +1,9 @@
+<h2>Your username now: {{ request.user.get_username }}</h2>
+<form action="{% url 'authentication:update_username' %}" method="post">
+    {% csrf_token %}
+    <input type="new_username" name="new_username" placeholder="new username">
+    <br>
+    <input type="password" name="password" placeholder="password">
+    <br>
+    <input type="submit" value="Change username">
+</form>

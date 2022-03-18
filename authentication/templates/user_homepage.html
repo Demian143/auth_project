@@ -1,0 +1,13 @@
+<h1>Wellcome to the user home page {{ request.user.get_username }}!!</h1>
+<h2>here you are able to change your credentials or delete your account.</h2>
+<ul>
+    <a href="{% url 'authentication:update_password' %}">Update password</a>
+    <br>
+    <a href="{% url 'authentication:update_username' %}">Update username</a>
+    <br>
+    <a href="{% url 'authentication:update_email' %}">Update email</a>
+    <br>
+    <a href="{% url 'authentication:delete_account' %}">Delete account</a>
+    <br>
+    <a href="{% url 'authentication:user_logout' %}">Logout</a>
+</ul>
