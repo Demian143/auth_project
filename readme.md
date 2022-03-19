@@ -4,7 +4,7 @@ Until this moment, you are able to do the following:
 <ul>
     <li>Create a new user with username, email and password.</li>
     <li>Login and change the password, username  and email.</li>
-<ul>
+</ul>
 
 <h2>How to run the project</h2>
 
