@@ -1,9 +1,10 @@
 <h1>Welcome to auth project</h1>
-
-It's a simple project to create and update information about a user.
+A simple project to create and update information about a user.
 Until this moment, you are able to do the following:
-    -Create a new user with username, email and password.
-    -Login and change the password, username  and email.
+<ul>
+    <li>Create a new user with username, email and password.</li>
+    <li>Login and change the password, username  and email.</li>
+<ul>
 
 <h2>How to run the project</h2>
 
