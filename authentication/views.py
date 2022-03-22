@@ -23,7 +23,7 @@ def signin(request):
         return HttpResponseRedirect(reverse('authentication:user_home'))
 
     else:
-        return render(request, 'signin.html', context={})
+        return render(request, 'authentication/signin.html', context={})
 
 
 def user_login(request):
@@ -41,7 +41,7 @@ def user_login(request):
             return HttpResponse('Something wrong, try again.')
 
     else:
-        return render(request, 'login.html')
+        return render(request, 'authentication/login.html')
 
 
 def user_logout(request):
@@ -56,7 +56,7 @@ def user_home_page(request):
             Update one of the data about the user (password, username and email).
             Delete the account."""
 
-    return render(request, 'user_homepage.html')
+    return render(request, 'authentication/user_homepage.html')
 
 
 @login_required(login_url='/authentication/login/')
@@ -73,7 +73,7 @@ def delete_account(request):
         return HttpResponse('One of the fields is wrong. Try again.')
 
     else:
-        return render(request, 'delete_account.html')
+        return render(request, 'authentication/delete_account.html')
 
 
 @login_required(login_url='/authentication/login/')
@@ -98,7 +98,7 @@ def update_password(request):
             return HttpResponse('Something went wrong.')
 
     else:
-        return render(request, 'update_password.html')
+        return render(request, 'authentication/update_password.html')
 
 
 @login_required(login_url='/authentication/login/')
@@ -114,7 +114,7 @@ def update_username(request):
 
             return HttpResponseRedirect(reverse('authentication:user_home'))
     else:
-        return render(request, 'update_username.html')
+        return render(request, 'authentication/update_username.html')
 
 
 @login_required(login_url='/authentication/login/')
@@ -134,4 +134,4 @@ def update_email(request):
         return HttpResponse('One of the fields is wrong.')
 
     else:
-        return render(request, 'update_email.html')
+        return render(request, 'authentication/update_email.html')

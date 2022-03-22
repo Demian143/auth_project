@@ -15,7 +15,7 @@ class TestSignIn(TestCase):
         response = self.client.get(reverse('authentication:signin'))
 
         self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, 'signin.html')
+        self.assertTemplateUsed(response, 'authentication/signin.html')
 
     def test_signin_success(self):
         self.assertEquals(self.new_user.status_code, 302)
