@@ -1,29 +1,34 @@
+import re
 from django.shortcuts import render, reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from .forms import SignInForm
+from django.views import View
 
 
-def signin(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+class SignInView(View):
+    def get(self, request):
+        form = SignInForm()
+        return render(request, 'authentication/signin.html', context={'form': form})
 
-        user = User.objects.filter(email=email)
+    def post(self, request):
+        form = SignInForm(request.POST)
+        if form.is_valid():
+            user = User.objects.filter(email=request.POST.get('email'))
 
-        if user:
-            return HttpResponse('User already exists.')
+            if user:
+                return HttpResponse('User already exists.')
 
-        user = User.objects.create_user(
-            username=name, email=email, password=password)
-        user.save()
+            user = User.objects.create_user(
+                username=request.POST.get('name'),
+                email=request.POST.get('email'),
+                password=request.POST.get('password')
+            )
+            user.save()
 
-        return HttpResponseRedirect(reverse('authentication:user_home'))
-
-    else:
-        return render(request, 'authentication/signin.html', context={})
+            return HttpResponseRedirect(reverse('authentication:user_home'))
 
 
 def user_login(request):
