@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import SignInForm
+from .forms import SignInForm, LoginForm
 from django.views import View
 
 
@@ -31,22 +31,28 @@ class SignInView(View):
             return HttpResponseRedirect(reverse('authentication:user_home'))
 
 
-def user_login(request):
-    if request.method == 'POST':
-        name = request.POST['name']
-        password = request.POST['password']
+class LoginView(View):
 
-        user = authenticate(request, username=name, password=password)
+    def get(self, request):
+        form = LoginForm()
+        return render(request,
+                      'authentication/login.html',
+                      context={'form': form})
 
-        if user:
-            login(request, user)
-            return HttpResponseRedirect(reverse('authentication:user_home'))
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            name = request.POST.get('name')
+            password = request.POST.get('password')
 
-        else:
-            return HttpResponse('Something wrong, try again.')
+            user = authenticate(request, username=name, password=password)
 
-    else:
-        return render(request, 'authentication/login.html')
+            if user:
+                login(request, user)
+                return HttpResponseRedirect(reverse('authentication:user_home'))
+
+            else:
+                return HttpResponse('Something wrong, try again.')
 
 
 def user_logout(request):
