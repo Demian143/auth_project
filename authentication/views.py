@@ -1,11 +1,12 @@
-import re
 from django.shortcuts import render, reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from .forms import SignInForm, LoginForm
 from django.views import View
+from django.views.generic import TemplateView
 
 
 class SignInView(View):
@@ -61,13 +62,9 @@ def user_logout(request):
     return HttpResponseRedirect(reverse('authentication:user_home'))
 
 
-@login_required(login_url='/authentication/login/')
-def user_home_page(request):
-    """Home page with references to the following actions:
-            Update one of the data about the user (password, username and email).
-            Delete the account."""
-
-    return render(request, 'authentication/user_homepage.html')
+@method_decorator(login_required(login_url='/authentication/login/'), name='dispatch')
+class UserHomeView(TemplateView):
+    template_name = 'authentication/user_homepage.html'
 
 
 @login_required(login_url='/authentication/login/')
