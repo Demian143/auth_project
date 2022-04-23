@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from .forms import SignInForm, LoginForm
+from .forms import SignInForm, LoginForm, DeleteAccountForm
 from django.views import View
 from django.views.generic import TemplateView
 
@@ -67,21 +67,23 @@ class UserHomeView(TemplateView):
     template_name = 'authentication/user_homepage.html'
 
 
-@login_required(login_url='/authentication/login/')
-def delete_account(request):
-    """ The name explains itself. """
-    if request.method == 'POST':
-        password = request.POST['password1'] == request.POST['password2']
+@method_decorator(login_required(login_url='/authentication/login/'), name='dispatch')
+class DeleteAccountView(View):
+    def get(self, request):
+        form = DeleteAccountForm()
+        return render(request, 'authentication/delete_account.html', context={'form': form})
 
-        if password is True:
-            user = User.objects.get(username=request.user.get_username())
-            user.delete()
-            return HttpResponseRedirect(reverse('authentication:user_home'))
+    def post(self, request):
+        form = DeleteAccountForm(request.POST)
 
-        return HttpResponse('One of the fields is wrong. Try again.')
+        if form.is_valid():
 
-    else:
-        return render(request, 'authentication/delete_account.html')
+            if request.POST.get('password') == request.POST.get('confirm_password'):
+                user = User.objects.get(username=request.user.get_username())
+                user.delete()
+                return HttpResponseRedirect(reverse('authentication:user_home'))
+
+            return HttpResponse('One of the fields is wrong. Try again.')
 
 
 @login_required(login_url='/authentication/login/')

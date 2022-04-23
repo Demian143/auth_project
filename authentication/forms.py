@@ -12,3 +12,9 @@ class SignInForm(forms.Form):
 class LoginForm(forms.Form):
     name = forms.CharField(max_length=100)
     password = forms.CharField(max_length=100, widget=forms.PasswordInput)
+
+
+class DeleteAccountForm(forms.Form):
+    password = forms.CharField(max_length=100, widget=forms.PasswordInput)
+    confirm_password = forms.CharField(
+        max_length=100, widget=forms.PasswordInput)

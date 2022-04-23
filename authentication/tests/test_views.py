@@ -79,7 +79,7 @@ class TestDeleteAccount(TestCase):
 
     def test_deletion_success(self):
         delete = self.client.post(reverse('authentication:delete_account'), data={
-            "password1": "123456", "password2": "123456"})
+            "password": "123456", "confirm_password": "123456"})
 
         self.assertEquals(delete.status_code, 302)
 
