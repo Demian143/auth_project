@@ -86,7 +86,7 @@ class DeleteAccountView(View):
 
 
 @method_decorator(login_required(login_url='/authentication/login/'), name='dispatch')
-class UpadatePasswordView(View):
+class UpdatePasswordView(View):
     def get(self, request):
         form = UpdatePasswordForm()
         return render(request, 'authentication/update_password.html', context={'form': form})
