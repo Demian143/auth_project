@@ -2,10 +2,10 @@
 <form action="{% url 'authentication:delete_account'%}" method="post">
     {% csrf_token %}
     <h3>Please enter your password</h3>
-    <input type="password" name="password1">
+    {{ form.password }}
     <br>
     <h3>Confirm Password</h3>
-    <input type="password" name="password2">
+    {{ form.confirm_password }}
     <br>
     <br>
     <input type="submit" value="Delete account">

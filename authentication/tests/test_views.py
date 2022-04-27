@@ -79,7 +79,7 @@ class TestDeleteAccount(TestCase):
 
     def test_deletion_success(self):
         delete = self.client.post(reverse('authentication:delete_account'), data={
-            "password1": "123456", "password2": "123456"})
+            "password": "123456", "confirm_password": "123456"})
 
         self.assertEquals(delete.status_code, 302)
 
@@ -165,8 +165,8 @@ class TestUpdateCredentials(TestCase):
 
         self.client.post(reverse('authentication:update_password'), data={
                          'old_password': self.password,
-                         'new_password1': new_password,
-                         'new_password2': new_password})
+                         'new_password': new_password,
+                         'confirm_new_password': new_password})
 
         user = authenticate(username=self.username, password=new_password)
         self.assertIsNotNone(user)

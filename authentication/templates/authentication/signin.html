@@ -4,13 +4,8 @@
         
         <form method="post" action="{% url 'authentication:signin' %}" method="post">
             {% csrf_token %}
-            <input type="text" name="name" placeholder="name">
-            <br>
-            <input type="email" name="email" placeholder="email">
-            <br>
-            <input type="password" name="password" placeholder="password">
-            <br>
-            <input type="submit" value="submit">
+            {{ form.as_ul }}
+            <input type="Submit" value="Submit">
         </form>  
     </body>
 </html>
