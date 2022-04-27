@@ -7,8 +7,10 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name='user_login'),
     path('logout/', views.user_logout, name='user_logout'),
     path('user_home/', views.UserHomeView.as_view(), name='user_home'),
-    path('update_password/', views.update_password, name='update_password'),
-    path('update_username/', views.update_username, name='update_username'),
-    path('update_email/', views.update_email, name='update_email'),
+    path('update_password/', views.UpadatePasswordView.as_view(),
+         name='update_password'),
+    path('update_username/', views.UpdateUserNameView.as_view(),
+         name='update_username'),
     path('delete_account', views.DeleteAccountView.as_view(), name='delete_account'),
+    path('update_email/', views.update_email, name='update_email'),
 ]

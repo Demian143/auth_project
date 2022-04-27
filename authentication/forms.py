@@ -18,3 +18,14 @@ class DeleteAccountForm(forms.Form):
     password = forms.CharField(max_length=100, widget=forms.PasswordInput)
     confirm_password = forms.CharField(
         max_length=100, widget=forms.PasswordInput)
+
+
+class UpdatePasswordForm(forms.Form):
+    old_password = forms.CharField(widget=forms.PasswordInput)
+    new_password = forms.CharField(widget=forms.PasswordInput)
+    confirm_new_password = forms.CharField(widget=forms.PasswordInput)
+
+
+class UpdateUserNameForm(forms.Form):
+    new_username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)

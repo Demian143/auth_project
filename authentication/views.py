@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from .forms import SignInForm, LoginForm, DeleteAccountForm
+from .forms import SignInForm, LoginForm, DeleteAccountForm, UpdatePasswordForm, UpdateUserNameForm
 from django.views import View
 from django.views.generic import TemplateView
 
@@ -33,7 +33,6 @@ class SignInView(View):
 
 
 class LoginView(View):
-
     def get(self, request):
         form = LoginForm()
         return render(request,
@@ -86,45 +85,54 @@ class DeleteAccountView(View):
             return HttpResponse('One of the fields is wrong. Try again.')
 
 
-@login_required(login_url='/authentication/login/')
-def update_password(request):
-    # confirm if old password is correct
-    # confirm if new password 1 and 2 are equal
-    # if correct, success
-    if request.method == 'POST':
-        new_password = request.POST['new_password1'] == request.POST['new_password2']
-        user = authenticate(username=request.user.get_username(),
-                            password=request.POST['old_password'])
+@method_decorator(login_required(login_url='/authentication/login/'), name='dispatch')
+class UpadatePasswordView(View):
+    def get(self, request):
+        form = UpdatePasswordForm()
+        return render(request, 'authentication/update_password.html', context={'form': form})
 
-        if new_password is True and user:
-            new_password = request.POST['new_password1']
-            # user = User.objects.get(username=request.user.get_username())
-            user.set_password(new_password)
-            user.save()
+    def post(self, request):
+        form = UpdatePasswordForm(request.POST)
+        if form.is_valid():
+            new_password = request.POST.get(
+                'new_password') == request.POST.get('confirm_new_password')
+            user = authenticate(username=request.user.get_username(),
+                                password=request.POST.get('old_password'))
 
-            return HttpResponseRedirect(reverse('authentication:user_home'))
+            if new_password is True and user:
+                new_password = request.POST.get('new_password')
+                # user = User.objects.get(username=request.user.get_username())
+                user.set_password(new_password)
+                user.save()
 
-        else:
-            return HttpResponse('Something went wrong.')
+                return HttpResponseRedirect(reverse('authentication:user_home'))
 
-    else:
-        return render(request, 'authentication/update_password.html')
+            else:
+                return HttpResponse('Something went wrong.')
 
 
-@login_required(login_url='/authentication/login/')
-def update_username(request):
-    if request.method == 'POST':
-        user = authenticate(request, username=request.user.get_username(
-        ), password=request.POST['password'])
+@method_decorator(login_required(login_url='/authentication/login/'), name='dispatch')
+class UpdateUserNameView(View):
+    def get(self, request):
+        form = UpdateUserNameForm()
+        return render(request, 'authentication/update_username.html', context={'form': form})
 
-        if user:
-            user = User.objects.get(username=request.user.get_username())
-            user.username = request.POST['new_username']
-            user.save()
+    def post(self, request):
+        form = UpdateUserNameForm(request.POST)
 
-            return HttpResponseRedirect(reverse('authentication:user_home'))
-    else:
-        return render(request, 'authentication/update_username.html')
+        if form.is_valid():
+            user = authenticate(request, username=request.user.get_username(
+            ), password=request.POST.get('password'))
+
+            if user:
+                user = User.objects.get(username=request.user.get_username())
+                user.username = request.POST.get('new_username')
+                user.save()
+
+                return HttpResponseRedirect(reverse('authentication:user_home'))
+
+            else:
+                return HttpResponse('Something went wrong.')
 
 
 @login_required(login_url='/authentication/login/')

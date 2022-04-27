@@ -165,8 +165,8 @@ class TestUpdateCredentials(TestCase):
 
         self.client.post(reverse('authentication:update_password'), data={
                          'old_password': self.password,
-                         'new_password1': new_password,
-                         'new_password2': new_password})
+                         'new_password': new_password,
+                         'confirm_new_password': new_password})
 
         user = authenticate(username=self.username, password=new_password)
         self.assertIsNotNone(user)
