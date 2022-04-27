@@ -4,7 +4,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from .forms import SignInForm, LoginForm, DeleteAccountForm, UpdatePasswordForm, UpdateUserNameForm
+
+from .forms import (
+    SignInForm, LoginForm, DeleteAccountForm,
+    UpdatePasswordForm, UpdateUserNameForm, UpdateEmailForm)
+
 from django.views import View
 from django.views.generic import TemplateView
 
@@ -135,21 +139,25 @@ class UpdateUserNameView(View):
                 return HttpResponse('Something went wrong.')
 
 
-@login_required(login_url='/authentication/login/')
-def update_email(request):
-    if request.method == 'POST':
-        new_email = request.POST['new_email'] == request.POST['confirm_new_email']
-        user = authenticate(username=request.user.get_username(),
-                            password=request.POST['password'])
+@method_decorator(login_required(login_url='/authentication/login/'), name='dispatch')
+class UpdateEmailView(View):
+    def post(self, request):
+        form = UpdateEmailForm(request.POST)
+        if form.is_valid():
+            new_email = request.POST.get(
+                'new_email') == request.POST.get('confirm_new_email')
+            user = authenticate(username=request.user.get_username(),
+                                password=request.POST.get('password'))
 
-        if user and new_email is True:
-            user = User.objects.get(username=request.user.get_username())
-            user.email = request.POST['new_email']
-            user.save()
+            if user and new_email is True:
+                user = User.objects.get(username=request.user.get_username())
+                user.email = request.POST.get('new_email')
+                user.save()
 
-            return HttpResponseRedirect(reverse('authentication:user_home'))
+                return HttpResponseRedirect(reverse('authentication:user_home'))
 
-        return HttpResponse('One of the fields is wrong.')
+            return HttpResponse('One of the fields is wrong.')
 
-    else:
-        return render(request, 'authentication/update_email.html')
+    def get(self, request):
+        form = UpdateEmailForm()
+        return render(request, 'authentication/update_email.html', context={'form': form})

@@ -29,3 +29,9 @@ class UpdatePasswordForm(forms.Form):
 class UpdateUserNameForm(forms.Form):
     new_username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class UpdateEmailForm(forms.Form):
+    new_email = forms.EmailField()
+    confirm_new_email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
